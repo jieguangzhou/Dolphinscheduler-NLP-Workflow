@@ -15,14 +15,14 @@ tokenized_datasets = load_from_disk(
     f'/tmp/dolphinscheduler/examples/{dataset_name}/{pretrained_model}/data')
 
 small_train_dataset = tokenized_datasets["train"].shuffle(
-    seed=42).select(range(64))
+    seed=42).select(range(2000))
 
-small_eval_dataset = small_train_dataset.select(range(32))
-small_train_dataset = small_train_dataset.select(range(32, 64))
+small_eval_dataset = small_train_dataset.select(range(1500))
+small_train_dataset = small_train_dataset.select(range(1500, 2000))
 
 
 small_test_dataset = tokenized_datasets["test"].shuffle(
-    seed=42).select(range(64))
+    seed=42).select(range(1000))
 
 
 model = AutoModelForSequenceClassification.from_pretrained(
