@@ -2,10 +2,10 @@ import mlflow
 import json
 import os
 
-remote_server_uri = "http://127.0.0.1:6006"
-model_name = "yelp_review_full"
+remote_server_uri = "http://127.0.0.1:5000"  # $PARAM:
+model_name = "yelp_review_full"  # $PARAM:dataset_name
 
-model_path = f'~/autodl-tmp/{model_name}/model'
+model_path = f'/tmp/dolphinscheduler/examples/{model_name}/model'
 
 
 mlflow.set_tracking_uri(remote_server_uri)

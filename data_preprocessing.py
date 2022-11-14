@@ -2,19 +2,18 @@ from transformers import AutoTokenizer
 from datasets import load_dataset
 import os
 
-dataset_name = "yelp_review_full"
-model_name = "bert-base-cased"
+dataset_name = "yelp_review_full"  # $PARAM:dataset_name
+pretrained_model = "bert-base-cased"  # $PARAM:pretrained_model
 
-data_path = f'~/autodl-tmp/{dataset_name}/data'
+data_path = f'/tmp/dolphinscheduler/examples/{dataset_name}/{pretrained_model}/data'
 
 if os.path.exists(data_path):
     print(f"{data_path} exists, skip data processing")
 
 else:
     dataset = load_dataset(dataset_name)
-    dataset["train"][100]
 
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 
     def tokenize_function(examples):
         return tokenizer(examples["text"], padding="max_length", truncation=True)

@@ -11,11 +11,11 @@ app = FastAPI()
 
 
 @app.get("/update_model")
-def read_root():
+def update_model():
     try:
         global classifier
         classifier = pipeline(task="text-classification",
-                              model='~/autodl-tmp/yelp_review_full/service_model/artifact', device=device)
+                              model='/tmp/dolphinscheduler/examples/yelp_review_full/service_model', device=device)
     except Exception as e:
         print(e)
         raise e
@@ -23,8 +23,13 @@ def read_root():
     return {"result": 1}
 
 
+@app.get("/health")
+def health():
+    return {"result": int(classifier is not None)}
+
+
 @app.get("/predict")
-def read_item(text: str):
+def predict(text: str):
     assert classifier is not None
     print(text)
     return classifier.predict(text)

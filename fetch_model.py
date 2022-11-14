@@ -1,15 +1,11 @@
 import mlflow
-import json
-import os
 import shutil
-import bentoml
-from transformers import pipeline
 
-remote_server_uri = "http://127.0.0.1:6006"
-model_name = "yelp_review_full"
-model_version = "3"
+remote_server_uri = "http://127.0.0.1:5000"  # $PARAM:
+model_name = "yelp_review_full"  # $PARAM:
+model_version = "1"  # $PARAM:
 
-save_model_path = f'~/autodl-tmp/{model_name}/service_model'
+save_model_path = f'/tmp/dolphinscheduler/examples/{model_name}/service_model'
 
 print(f"delete {save_model_path} if exist")
 shutil.rmtree(save_model_path, ignore_errors=True)

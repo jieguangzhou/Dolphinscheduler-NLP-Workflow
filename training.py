@@ -8,25 +8,26 @@ from datasets import load_from_disk
 import os
 
 
-dataset_name = "yelp_review_full"
-model_name = "bert-base-cased"
+dataset_name = "yelp_review_full"  # $PARAM:dataset_name
+pretrained_model = "bert-base-cased"  # $PARAM:pretrained_model
 
-tokenized_datasets = load_from_disk(f'~/autodl-tmp/{dataset_name}/data')
+tokenized_datasets = load_from_disk(
+    f'/tmp/dolphinscheduler/examples/{dataset_name}/{pretrained_model}/data')
 
 small_train_dataset = tokenized_datasets["train"].shuffle(
-    seed=42).select(range(2000))
+    seed=42).select(range(64))
 
-small_eval_dataset = small_train_dataset.select(range(1000))
-small_train_dataset = small_train_dataset.select(range(1000, 2000))
+small_eval_dataset = small_train_dataset.select(range(32))
+small_train_dataset = small_train_dataset.select(range(32, 64))
 
 
 small_test_dataset = tokenized_datasets["test"].shuffle(
-    seed=42).select(range(1000))
+    seed=42).select(range(64))
 
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    model_name, num_labels=5)
-tokenizer = AutoTokenizer.from_pretrained(model_name)
+    pretrained_model, num_labels=5)
+tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 
 training_args = TrainingArguments(output_dir="test_trainer")
 
@@ -51,14 +52,14 @@ trainer = Trainer(
 
 trainer.train()
 
-model_path = f'~/autodl-tmp/{dataset_name}/model'
+model_path = f'/tmp/dolphinscheduler/examples/{dataset_name}/model'
 model.save_pretrained(model_path)
 tokenizer.save_pretrained(model_path)
 
 log_metrics = trainer.evaluate(small_test_dataset)
 log_params = {
     "dataset_name": dataset_name,
-    "model_name": model_name
+    "pretrained_model": pretrained_model,
 }
 
 json.dump(log_metrics, open(os.path.join(model_path, "log_metrics.json"), "w"))
